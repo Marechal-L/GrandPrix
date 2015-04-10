@@ -1,0 +1,53 @@
+#include "fonctions.h"
+
+Map* map_nouveau(int tailleX, int tailleY)
+{
+	Map *map = NULL;
+	int i;
+
+	map->matrice = (char**)malloc(tailleY*sizeof(char*));
+	for(i=0;i<tailleX;i++)
+	{
+		map->matrice[0] = (char*)calloc(tailleX,sizeof(char));
+	}
+	map->nbBoost = 5;
+	return map;
+}
+
+void map_liberer(Map **map)
+{
+	if(!map || !(*map)) return;
+	
+	int i;
+	for(i=0;i<(*map)->tailleX;i++)
+		free((*map)->matrice[i]);
+	free((*map)->matrice);
+	free(map);
+}
+
+Map* map_charger()
+{
+	fprintf(info,"info : %p",info);
+	Map *map = NULL;
+	char c;
+	int i, j, tailleX, tailleY, carburant;
+
+	fscanf(stdin,"%d %d %d", &tailleX, &tailleY, &carburant);
+
+	map = map_nouveau(tailleX, tailleY);
+	map->carburant = carburant;
+	printf("Debut");
+	while(fread(&c, sizeof(char), 1, stdin)==1 && c!='\n');
+	for (j=0; j<map->tailleY; j++)
+	{
+		for(i=0;i<map->tailleX;i++)
+		{
+			map->matrice[i][j] = c;
+			fprintf(info,"%c",c);
+		}
+		fprintf(info,"\n");
+	}
+	printf("\nFin");
+	fflush(info);
+	return map;	
+}
